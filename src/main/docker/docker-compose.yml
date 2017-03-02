@@ -40,5 +40,5 @@ services:
     command: "/bin/bash"
 
 networks:
-  default:
+  lab:
     driver: bridge
