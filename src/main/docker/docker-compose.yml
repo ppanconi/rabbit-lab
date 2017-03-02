@@ -1,0 +1,44 @@
+version: '2'
+
+services:
+
+  rabbit-01:
+    image: rabbitmq:3.6.6-management-alpine
+    hostname: rabbit-01
+    environment:
+      - RABBITMQ_ERLANG_COOKIE=pulcinellasecret
+#      - RABBITMQ_HIPE_COMPILE=1
+    networks:
+      default:
+        aliases:
+          # All app servers can be referred to by this alias on the backend network
+          - rabbit
+    ports:
+      - "15673:15672"
+
+  rabbit-02:
+    image: rabbitmq:3.6.6-management-alpine
+    hostname: rabbit-02
+    environment:
+      - RABBITMQ_ERLANG_COOKIE=pulcinellasecret
+  #      - RABBITMQ_HIPE_COMPILE=1
+    networks:
+      default:
+        aliases:
+          # All app servers can be referred to by this alias on the backend network
+          - rabbit
+    ports:
+      - "15674:15672"
+
+  rabbit-lab:
+    build: ../../..
+    volumes:
+      - ../../..:/rabbit-lab
+
+#    tty: true
+#    stdin_open: true
+    command: "/bin/bash"
+
+networks:
+  default:
+    driver: bridge
