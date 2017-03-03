@@ -2,33 +2,73 @@ version: '2'
 
 services:
 
-  rabbit-01:
-    image: rabbitmq:3.6.6-management-alpine
-    hostname: rabbit-01
+  rabbit_mnt:
+    build: ./rabbit
+    hostname: rabbit_mnt
+    container_name: rabbit_mnt
     environment:
       - RABBITMQ_ERLANG_COOKIE=pulcinellasecret
 #      - RABBITMQ_HIPE_COMPILE=1
-    networks:
-      default:
-        aliases:
-          # All app servers can be referred to by this alias on the backend network
-          - rabbit
+#    networks:
+#      default:
+#        aliases:
+#          # All app servers can be referred to by this alias on the backend network
+#          - rabbit
     ports:
-      - "15673:15672"
+      - "15672:15672"
 
-  rabbit-02:
-    image: rabbitmq:3.6.6-management-alpine
-    hostname: rabbit-02
+  rabbit:
+    build: ./rabbit
+    hostname: rabbit
+    container_name: rabbit
     environment:
       - RABBITMQ_ERLANG_COOKIE=pulcinellasecret
-  #      - RABBITMQ_HIPE_COMPILE=1
-    networks:
-      default:
-        aliases:
-          # All app servers can be referred to by this alias on the backend network
-          - rabbit
+#      - RABBITMQ_HIPE_COMPILE=1
+#    networks:
+#      default:
+#        aliases:
+#          # All app servers can be referred to by this alias on the backend network
+#          - rabbit
+
+  consul:
+    image: gavinmroy/alpine-consul:0.5.2-0
+    hostname: consul
+    container_name: consul
     ports:
-      - "15674:15672"
+      - 8300
+      - 8301
+      - 8301/udp
+      - 8302/udp
+      - 8400
+      - 8500
+
+#  rabbit-01:
+#    image: rabbitmq:3.6.6-management-alpine
+#    hostname: rabbit-01
+#    environment:
+#      - RABBITMQ_ERLANG_COOKIE=pulcinellasecret
+##      - RABBITMQ_HIPE_COMPILE=1
+#    networks:
+#      default:
+#        aliases:
+#          # All app servers can be referred to by this alias on the backend network
+#          - rabbit
+#    ports:
+#      - "15673:15672"
+#
+#  rabbit-02:
+#    image: rabbitmq:3.6.6-management-alpine
+#    hostname: rabbit-02
+#    environment:
+#      - RABBITMQ_ERLANG_COOKIE=pulcinellasecret
+#  #      - RABBITMQ_HIPE_COMPILE=1
+#    networks:
+#      default:
+#        aliases:
+#          # All app servers can be referred to by this alias on the backend network
+#          - rabbit
+#    ports:
+#      - "15674:15672"
 
   rabbit-lab:
     build: ../../..
@@ -39,6 +79,6 @@ services:
 #    stdin_open: true
     command: "/bin/bash"
 
-networks:
-  lab:
-    driver: bridge
+#networks:
+#  default:
+#    driver: bridge

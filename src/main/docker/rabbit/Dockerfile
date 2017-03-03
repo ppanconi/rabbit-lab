@@ -7,11 +7,14 @@ RUN \
   cd /tmp/ && \
   tar xf /tmp/autocluster-0.6.1.tgz && \
   rm /tmp/autocluster-0.6.1.tgz && \
-  cp /tmp/plugins/*  /usr/lib/rabbitmq/plugins && \
+  cp /tmp/plugins/*  /plugins && \
   rm -r /tmp/plugins && \
   apk --purge del curl tar gzip xz
 
-RUN /usr/lib/rabbitmq/sbin/rabbitmq-plugins --offline enable autocluster
+RUN /opt/rabbitmq/sbin/rabbitmq-plugins --offline enable autocluster
 
 RUN \
-    echo "AUTOCLUSTER_TYPE="
+    echo "export AUTOCLUSTER_LOG_LEVEL=debug" >> /etc/rabbitmq/rabbitmq-env.conf && \
+    echo "export CONSUL_SVC_ADDR_AUTO=true" >> /etc/rabbitmq/rabbitmq-env.conf && \
+    echo "export AUTOCLUSTER_TYPE=consul" >> /etc/rabbitmq/rabbitmq-env.conf && \
+    echo "export CONSUL_HOST=consul" >> /etc/rabbitmq/rabbitmq-env.conf
